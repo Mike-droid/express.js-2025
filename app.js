@@ -44,7 +44,7 @@ app.post('/form', (req, res) => {
 });
 
 app.post('/api/data', (req, res) => {
-	const { data } = req.body;
+	const data = req.body;
 	if (!data || Object.keys(data).length === 0) {
 		return res.status(400).json({ error: 'No data provided' });
 	}
