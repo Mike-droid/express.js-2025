@@ -31,6 +31,26 @@ app.get('/search', (req, res) => {
 	`);
 });
 
+app.post('/form', (req, res) => {
+	const { name } = req.body || 'anonymous';
+	const { email } = req.body || 'no email provided';
+	res.json({
+		message: 'Form submitted successfully',
+		data: {
+			name: name,
+			email: email,
+		},
+	});
+});
+
+app.post('/api/data', (req, res) => {
+	const { data } = req.body;
+	if (!data || Object.keys(data).length === 0) {
+		return res.status(400).json({ error: 'No data provided' });
+	}
+	res.status(201).json({ message: 'Data received', data: data });
+});
+
 app.listen(PORT, () => {
 	console.log('working app on http://localhost:' + PORT);
 });
