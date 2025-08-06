@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch --env-file .env app.js"
   },
-  "keywords": [],
+  "keywords": ["express", "node", "javascript", "backend", "framework"],
   "author": "Miguel Reyes <miguelreyesmoreno@hotmail.com>",
   "license": "MIT",
   "description": "Curso express.js 2025",
