@@ -6,12 +6,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch --env-file .env app.js"
   },
-  "keywords": ["express", "node", "javascript", "backend", "framework"],
+  "keywords": [
+    "express",
+    "node",
+    "javascript",
+    "backend",
+    "framework"
+  ],
   "author": "Miguel Reyes <miguelreyesmoreno@hotmail.com>",
   "license": "MIT",
   "description": "Curso express.js 2025",
   "dependencies": {
     "express": "^5.1.0"
-  },
-  "devDependencies": {}
+  }
 }
