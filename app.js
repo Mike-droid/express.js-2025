@@ -68,6 +68,50 @@ app.get('/users', (req, res) => {
 	});
 });
 
+app.post('/users', (req, res) => {
+	const newUser = req.body;
+	if (!newUser || !newUser.name || !newUser.email) {
+		return res.status(400).json({ error: 'Name and email are required' });
+	}
+
+	if (newUser.name.length < 3) {
+		return res
+			.status(400)
+			.json({ error: 'Name must be at least 3 characters long' });
+	}
+
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(newUser.email)) {
+		return res.status(400).json({ error: 'Invalid email format' });
+	}
+
+	fs.readFile(usersFilePath, 'utf-8', (err, data) => {
+		if (err) {
+			return res.status(500).json({ error: 'Error reading users file' });
+		}
+		try {
+			const users = JSON.parse(data);
+			users.push(newUser);
+			fs.writeFile(
+				usersFilePath,
+				JSON.stringify(users, null, 2),
+				(writeErr) => {
+					if (writeErr) {
+						return res
+							.status(500)
+							.json({ error: 'Error writing to users file' });
+					}
+					res
+						.status(201)
+						.json({ message: 'User added successfully', user: newUser });
+				}
+			);
+		} catch (parseError) {
+			res.status(500).json({ error: 'Error parsing users data' });
+		}
+	});
+});
+
 app.listen(PORT, () => {
 	console.log('working app on http://localhost:' + PORT);
 });
