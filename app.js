@@ -1,4 +1,7 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const usersFilePath = path.join(__dirname, 'users.json');
 
 const app = express();
 
@@ -49,6 +52,20 @@ app.post('/api/data', (req, res) => {
 		return res.status(400).json({ error: 'No data provided' });
 	}
 	res.status(201).json({ message: 'Data received', data: data });
+});
+
+app.get('/users', (req, res) => {
+	fs.readFile(usersFilePath, 'utf-8', (err, data) => {
+		if (err) {
+			return res.status(500).json({ error: 'Error reading users file' });
+		}
+		try {
+			const users = JSON.parse(data);
+			res.json(users);
+		} catch (parseError) {
+			res.status(500).json({ error: 'Error parsing users data' });
+		}
+	});
 });
 
 app.listen(PORT, () => {
