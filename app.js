@@ -70,6 +70,8 @@ app.get('/users', (req, res) => {
 
 app.post('/users', (req, res) => {
 	const newUser = req.body;
+	const newUserId = Date.now(); // Simple ID generation based on timestamp
+	newUser.id = newUserId;
 	if (!newUser || !newUser.name || !newUser.email) {
 		return res.status(400).json({ error: 'Name and email are required' });
 	}
@@ -154,6 +156,39 @@ app.put('/users/:id', (req, res) => {
 					res.status(200).json({
 						message: 'User updated successfully',
 						user: users[userIndex],
+					});
+				}
+			);
+		} catch (parseError) {
+			res.status(500).json({ error: 'Error parsing users data' });
+		}
+	});
+});
+
+app.delete('/users/:id', (req, res) => {
+	const userId = parseInt(req.params.id, 10);
+	fs.readFile(usersFilePath, 'utf-8', (err, data) => {
+		if (err) {
+			return res.status(500).json({ error: 'Error reading users file' });
+		}
+		try {
+			const users = JSON.parse(data);
+			const userIndex = users.findIndex((user) => user.id === userId);
+			if (userIndex === -1) {
+				return res.status(404).json({ error: 'User not found' });
+			}
+			users.splice(userIndex, 1);
+			fs.writeFile(
+				usersFilePath,
+				JSON.stringify(users, null, 2),
+				(writeErr) => {
+					if (writeErr) {
+						return res
+							.status(500)
+							.json({ error: 'Error writing to users file' });
+					}
+					res.status(200).json({
+						message: 'User deleted successfully',
 					});
 				}
 			);
