@@ -112,6 +112,57 @@ app.post('/users', (req, res) => {
 	});
 });
 
+app.put('/users/:id', (req, res) => {
+	const userId = parseInt(req.params.id, 10);
+	const updatedUser = req.body;
+
+	if (!updatedUser || !updatedUser.name || !updatedUser.email) {
+		return res.status(400).json({ error: 'Name and email are required' });
+	}
+
+	if (updatedUser.name.length < 3) {
+		return res
+			.status(400)
+			.json({ error: 'Name must be at least 3 characters long' });
+	}
+
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(updatedUser.email)) {
+		return res.status(400).json({ error: 'Invalid email format' });
+	}
+
+	fs.readFile(usersFilePath, 'utf-8', (err, data) => {
+		if (err) {
+			return res.status(500).json({ error: 'Error reading users file' });
+		}
+		try {
+			const users = JSON.parse(data);
+			const userIndex = users.findIndex((user) => user.id === userId);
+			if (userIndex === -1) {
+				return res.status(404).json({ error: 'User not found' });
+			}
+			users[userIndex] = { ...users[userIndex], ...updatedUser };
+			fs.writeFile(
+				usersFilePath,
+				JSON.stringify(users, null, 2),
+				(writeErr) => {
+					if (writeErr) {
+						return res
+							.status(500)
+							.json({ error: 'Error writing to users file' });
+					}
+					res.status(200).json({
+						message: 'User updated successfully',
+						user: users[userIndex],
+					});
+				}
+			);
+		} catch (parseError) {
+			res.status(500).json({ error: 'Error parsing users data' });
+		}
+	});
+});
+
 app.listen(PORT, () => {
 	console.log('working app on http://localhost:' + PORT);
 });
