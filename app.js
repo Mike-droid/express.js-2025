@@ -3,12 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const usersFilePath = path.join(__dirname, 'users.json');
 const LoggerMiddleware = require('./middlewares/logger');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(LoggerMiddleware);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
@@ -198,6 +200,10 @@ app.delete('/users/:id', (req, res) => {
 			res.status(500).json({ error: 'Error parsing users data' });
 		}
 	});
+});
+
+app.get('/error', (req, res, next) => {
+	next(new Error('This is a forced error for testing purposes'));
 });
 
 app.listen(PORT, () => {
