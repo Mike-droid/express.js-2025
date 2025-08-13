@@ -2,11 +2,13 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const usersFilePath = path.join(__dirname, 'users.json');
+const LoggerMiddleware = require('./middlewares/logger');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(LoggerMiddleware);
 
 const PORT = process.env.PORT || 3000;
 
