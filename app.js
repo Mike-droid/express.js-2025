@@ -1,9 +1,7 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const usersFilePath = path.join(__dirname, 'users.json');
 const LoggerMiddleware = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
+const authenticateToken = require('./middlewares/auth');
 const { PrismaClient } = require('./generated/prisma');
 const prisma = new PrismaClient();
 
@@ -15,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(LoggerMiddleware);
 app.use(errorHandler);
+//app.use(authenticateToken);
 
 const PORT = process.env.PORT || 3000;
 
@@ -104,6 +103,10 @@ app.delete('/db-users', async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: 'Error deleting users from database' });
 	}
+});
+
+app.get('/protected-route', authenticateToken, (req, res) => {
+	res.json({ message: 'This is a protected route' });
 });
 
 app.listen(PORT, () => {
