@@ -3,6 +3,7 @@ const LoggerMiddleware = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 const authenticateToken = require('./middlewares/auth');
 const { PrismaClient } = require('./generated/prisma');
+const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 const { seedDatabase } = require('./seed');
@@ -107,6 +108,27 @@ app.delete('/db-users', async (req, res) => {
 
 app.get('/protected-route', authenticateToken, (req, res) => {
 	res.json({ message: 'This is a protected route' });
+});
+
+app.post('/register', async (req, res) => {
+	const { name, email, password } = req.body;
+
+	if (!name || !email || !password) {
+		return res.status(400).json({ error: 'All fields are required' });
+	}
+
+	const hashedPassword = await bcrypt.hash(password, 10);
+
+	try {
+		const user = await prisma.user.create({
+			data: { name, email, password: hashedPassword, role: 'USER' },
+		});
+		res.status(201).json({ message: 'User registered successfully' });
+	} catch (error) {
+		res
+			.status(500)
+			.json({ error: 'Error registering user', details: error.message });
+	}
 });
 
 app.listen(PORT, () => {
