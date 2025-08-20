@@ -1,7 +1,7 @@
 const express = require('express');
-const LoggerMiddleware = require('./middlewares/logger');
-const errorHandler = require('./middlewares/errorHandler');
-const authenticateToken = require('./middlewares/auth');
+const LoggerMiddleware = require('./src/middlewares/logger');
+const errorHandler = require('./src/middlewares/errorHandler');
+const authenticateToken = require('./src/middlewares/auth');
 const { PrismaClient } = require('./generated/prisma');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -15,7 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(LoggerMiddleware);
 app.use(errorHandler);
-//app.use(authenticateToken);
 
 const PORT = process.env.PORT || 3000;
 
