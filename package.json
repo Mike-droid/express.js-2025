@@ -2,6 +2,7 @@
   "name": "curso_express_2025",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch --env-file .env src/server.js",
@@ -19,6 +20,7 @@
   "description": "Curso express.js 2025",
   "dependencies": {
     "@prisma/client": "^6.14.0",
+    "@prisma/extension-accelerate": "^2.0.2",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "express": "^5.1.0",

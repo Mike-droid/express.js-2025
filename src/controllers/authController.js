@@ -1,6 +1,6 @@
-const { registerUser, loginUser } = require('../services/authService');
+import { registerUser, loginUser } from '../services/authService.js';
 
-const register = async (req, res) => {
+export const register = async (req, res) => {
 	try {
 		const { email, password, name } = req.body;
 		await registerUser(email, password, name);
@@ -10,7 +10,7 @@ const register = async (req, res) => {
 	}
 };
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		const token = await loginUser(email, password);
@@ -19,5 +19,3 @@ const login = async (req, res) => {
 		return res.status(401).json({ error: error.message });
 	}
 };
-
-module.exports = { register, login };

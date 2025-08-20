@@ -1,11 +1,11 @@
-const express = require('express');
-const routes = require('./routes');
+import express, { json, urlencoded } from 'express';
+import routes from './routes/index.js';
 const app = express();
-const LoggerMiddleware = require('./middlewares/logger');
-const errorHandler = require('./middlewares/errorHandler');
+import { LoggerMiddleware } from './middlewares/logger.js';
+import {errorHandler} from './middlewares/errorHandler.js';
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 app.use(LoggerMiddleware);
 app.use(errorHandler);
 app.use('/api', routes);
@@ -14,4 +14,4 @@ app.get('/', (req, res) => {
 	res.send('Hello World!');
 });
 
-module.exports = app;
+export default app;

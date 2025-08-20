@@ -1,4 +1,4 @@
-const LoggerMiddleware = (req, res, next) => {
+export const LoggerMiddleware = (req, res, next) => {
 	const timestamp = new Date().toLocaleString();
 
 	console.log(`[${timestamp} ${req.method} ${req.url}] - IP: ${req.ip}`);
@@ -14,5 +14,3 @@ const LoggerMiddleware = (req, res, next) => {
 
 	next();
 };
-
-module.exports = LoggerMiddleware;
