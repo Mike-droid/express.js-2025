@@ -3,13 +3,15 @@ import {
 	createReservation_s,
 	updateReservation_s,
 	deleteReservation_s,
-} from '../services/reservationService';
+} from '../services/reservationService.js';
 
 export const createReservation_c = async (req, res) => {
+	console.log("🚀 ~ createReservation_c ~ req:", req.body)
 	try {
 		const reservation = await createReservation_s(req.body);
 		return res.status(201).json(reservation);
 	} catch (error) {
+		console.log("🚀 ~ createReservation_c ~ error:", error)
 		res.status(400).json({ message: 'Error creating reservation' });
 	}
 };
